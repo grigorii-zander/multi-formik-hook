@@ -20,7 +20,7 @@
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc --noEmit",
-    "prepublish": "pnpm run build"
+    "prepublish": "pnpm run typecheck && pnpm run build"
   },
   "keywords": ["formik", "hook", "react", "form", "react-hooks"],
   "author": "Grigorii Zander <wyzen.all@gmail.com>",
