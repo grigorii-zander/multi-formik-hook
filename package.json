@@ -1,0 +1,38 @@
+{
+  "name": "multi-formik-hook",
+  "version": "0.0.1.beta",
+  "description": "React hook for formik",
+  "main": "dist/multi-formik-hook.js",
+  "module": "dist/multi-formik-hook.mjs",
+  "types": "dist/multi-formik-hook.d.ts",
+  "files": [
+    "dist/",
+    "src/",
+    "LICENSE",
+    "README.md"
+  ],
+  "sideEffects": false,
+  "homepage": "https://github.com/grigorii-zander/multi-formik-hook",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:grigorii-zander/multi-formik-hook.git"
+  },
+  "scripts": {
+    "build": "tsup"
+  },
+  "keywords": ["formik", "hook", "react", "form", "react-hooks"],
+  "author": "Grigorii Zander <wyzen.all@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^28.1.6",
+    "@types/react": "^18.0.15",
+    "formik": "^2.2.0",
+    "react": ">=16.8.0",
+    "tsup": "^6.1.3",
+    "typescript": "^4.7.4"
+  },
+  "peerDependencies": {
+    "formik": "^2.2.0",
+    "react": ">=16.8.0"
+  }
+}
