@@ -40,11 +40,11 @@ export function useMultiFormik<T extends Record<string, any>,
   const groupInstances = useRef<Partial<GroupInstanceMap>>({})
 
   type HookFn<T> = FormikHook<T>
-  type HookFnMap = { [K in KEYS]: HookFn<T[K]> }
+  type HookFnMap = { [K in NON_ARRAY_KEYS]: HookFn<T[K]> }
   const hooksRef = useRef<Partial<HookFnMap>>({})
 
   type HookFnGroup<T> = { [index: string]: HookFn<T> }
-  type HookFnGroupMap = { [K in KEYS]: HookFnGroup<ArrayItem<T[K]>> }
+  type HookFnGroupMap = { [K in ARRAY_KEYS]: HookFnGroup<ArrayItem<T[K]>> }
   const hooksGroupsRef = useRef<Partial<HookFnGroupMap>>({})
 
   const [dirty, setDirty] = useState(false)
