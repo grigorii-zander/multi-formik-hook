@@ -1,10 +1,10 @@
 {
   "name": "multi-formik-hook",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "React hook for formik",
-  "main": "dist/multi-formik-hook.js",
-  "module": "dist/multi-formik-hook.mjs",
-  "types": "dist/multi-formik-hook.d.ts",
+  "main": "./dist/useMultiFormik.js",
+  "module": "./dist/useMultiFormik.mjs",
+  "types": "./dist/useMultiFormik.d.ts",
   "files": [
     "dist/",
     "src/",
@@ -23,7 +23,7 @@
     "prepublish": "pnpm run typecheck && pnpm run build"
   },
   "keywords": ["formik", "hook", "react", "form", "react-hooks"],
-  "author": "Grigorii Zander <wyzen.all@gmail.com>",
+  "author": "Grigorii Zander <grigorii.zander@gmail.com>",
   "license": "MIT",
   "devDependencies": {
     "@types/jest": "^28.1.6",

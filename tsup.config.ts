@@ -1,7 +1,7 @@
 import { defineConfig } from 'tsup'
 
 export default defineConfig({
-  entry: ['./src/multi-formik-hook.ts'],
+  entry: ['./src/useMultiFormik.ts'],
   format: ['cjs', 'esm'],
   target: 'esnext',
   dts: true,

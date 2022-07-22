@@ -27,7 +27,7 @@ type KeysNotOfType<MAP, TYPE, KEYS extends keyof MAP> = {
   [K in KEYS]: K extends string ? MAP[K] extends TYPE ? never : K : never
 }[KEYS]
 
-export function useMultiFormikHook<T extends Record<string, any>,
+export function useMultiFormik<T extends Record<string, any>,
   KEYS extends keyof T = keyof T,
   ARRAY_KEYS extends KeysOfType<T, any[], KEYS> = KeysOfType<T, any[], KEYS>,
   NON_ARRAY_KEYS extends KeysNotOfType<T, any[], KEYS> = KeysNotOfType<T, any[], KEYS>,

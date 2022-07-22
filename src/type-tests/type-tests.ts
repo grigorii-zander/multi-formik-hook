@@ -1,4 +1,4 @@
-import { FormikHook, useMultiFormikHook } from '../multi-formik-hook'
+import { FormikHook, useMultiFormik } from '../useMultiFormik'
 
 type SingleFormProps1 = {
   single1StringProp: string
@@ -47,7 +47,7 @@ const multiForm1Receiver = ({ useFormik }: { useFormik: FormikHook<MultiFormProp
 const multiForm2Receiver = ({ useFormik }: { useFormik: FormikHook<MultiFormProps2> }) => {
 }
 
-const forms = useMultiFormikHook<FormsDataType>()
+const forms = useMultiFormik<FormsDataType>()
 
 /**** `bind` interface test ****/
 // Only "single" forms should be available for the "bind" method
