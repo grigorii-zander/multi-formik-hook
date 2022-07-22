@@ -18,7 +18,9 @@
     "url": "git@github.com:grigorii-zander/multi-formik-hook.git"
   },
   "scripts": {
-    "build": "tsup"
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "prepublish": "pnpm run build"
   },
   "keywords": ["formik", "hook", "react", "form", "react-hooks"],
   "author": "Grigorii Zander <wyzen.all@gmail.com>",

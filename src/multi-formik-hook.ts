@@ -15,16 +15,16 @@ type HookReturnType<T> = ReturnType<OriginalFormikHook<T>>
 export type FormikHook<T = any> = (config: HookConfig<T>) => HookReturnType<T>
 
 type ArrayItem<T> = T extends Array<infer U> ? U : T
-type FormikEntry<T extends Record<string, any>> = {
-  [K in keyof T]: {key: K, formik: T[K]};
-}[keyof T];
+type FormikEntry<T extends Record<string, any>, KEYS extends keyof T> = {
+  [K in KEYS]: {key: K, formik: ReturnType<FormikHook<ArrayItem<T[K]>>>};
+}[KEYS];
 
 type KeysOfType<MAP, TYPE, KEYS extends keyof MAP> = {
-  [K in KEYS]: MAP[K] extends TYPE ? K : never
+  [K in KEYS]: K extends string ? MAP[K] extends TYPE ? K : never : never
 }[KEYS]
 
 type KeysNotOfType<MAP, TYPE, KEYS extends keyof MAP> = {
-  [K in KEYS]: MAP[K] extends TYPE ? never : K
+  [K in KEYS]: K extends string ? MAP[K] extends TYPE ? never : K : never
 }[KEYS]
 
 export function useMultiFormikHook<
@@ -34,7 +34,7 @@ export function useMultiFormikHook<
   NON_ARRAY_KEYS extends KeysNotOfType<T, any[], KEYS> = KeysNotOfType<T, any[], KEYS>,
   >() {
   type Instance<T> = ReturnType<FormikHook<T>>
-  type InstanceMap = { [K in KEYS]: Instance<T[K]> }
+  type InstanceMap = { [K in NON_ARRAY_KEYS]: Instance<T[K]> }
   const instances = useRef<Partial<InstanceMap>>({});
 
   type GroupInstanceMap = { [K in ARRAY_KEYS]: {[index: string]: Instance<ArrayItem<T[K]>>} }
@@ -52,14 +52,14 @@ export function useMultiFormikHook<
   const [valid, setValid] = useState(true);
 
   const map = useCallback(
-    <R>(cb: (value: FormikEntry<T[KEYS]>) => R): R[] => {
+    <R>(cb: (value: FormikEntry<T, NON_ARRAY_KEYS> | FormikEntry<T, ARRAY_KEYS>) => R): R[] => {
       const result: R[] = [];
       entries(instances.current).forEach(([key, value]) => {
-        result.push(cb({ key, formik: value }));
+        result.push(cb({ key: key, formik: value }));
       });
       entries(groupInstances.current).forEach(([key, group]) => {
         values(group).forEach((value) => {
-          result.push(cb({ key, formik: value }));
+          result.push(cb({ key: key, formik: value }));
         });
       });
       return result;
@@ -197,8 +197,12 @@ export function useMultiFormikHook<
     [isAllValid, map],
   );
 
-  const getValues = useCallback(<K extends keyof T>(instanceName: K) => {
-    return instances.current[instanceName]?.values || null;
+  const getValues = useCallback(<K extends NON_ARRAY_KEYS>(instanceKey: K) => {
+    return instances.current[instanceKey]?.values || null;
+  }, []);
+
+  const getGroupValues = useCallback(<K extends ARRAY_KEYS>(instanceKey: K, id: string) => {
+    return groupInstances.current[instanceKey]?.[id]?.values || null;
   }, []);
 
   const reset = useCallback(
@@ -225,6 +229,7 @@ export function useMultiFormikHook<
     dirty,
     submitAll,
     getValues,
+    getGroupValues,
     reset,
     bind,
     bindGroup,
