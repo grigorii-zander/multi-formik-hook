@@ -1,7 +1,6 @@
-
 export const isPlainObject = (obj: unknown) => {
-  return obj !== null && Object.prototype.toString.call(obj) === '[object Object]';
-};
+  return obj !== null && Object.prototype.toString.call(obj) === '[object Object]'
+}
 
 /**
  * Creates key:value representation of the given nested object. Where "key" is lodash like object path.
@@ -22,35 +21,35 @@ export const isPlainObject = (obj: unknown) => {
  */
 export const flat = (obj: unknown): Record<string, any> => {
   if (!isPlainObject(obj) && !Array.isArray(obj)) {
-    return {};
+    return {}
   }
-  const result = {};
+  const result = {}
 
   const walk = (obj, path = '') => {
     if (isPlainObject(obj)) {
       return Object.keys(obj).forEach(key => {
-        walk(obj[key], path.length ? `${path}.${key}` : key);
-      });
+        walk(obj[key], path.length ? `${path}.${key}` : key)
+      })
     }
     if (Array.isArray(obj)) {
       return obj.forEach((obj, i) => {
-        walk(obj, `${path}[${i}]`);
-      });
+        walk(obj, `${path}[${i}]`)
+      })
     }
 
-    result[path] = obj;
-  };
-  walk(obj, '');
-  return result;
-};
+    result[path] = obj
+  }
+  walk(obj, '')
+  return result
+}
 
 // "typesafe" Object.entries
 export const entries = <T, K extends keyof T = keyof T>(obj: T): [K, NonNullable<T[K]>][] => {
-  return Object.entries(obj).filter(([, v]) => !!v) as unknown as [K, NonNullable<T[K]>][];
-};
+  return Object.entries(obj).filter(([, v]) => !!v) as unknown as [K, NonNullable<T[K]>][]
+}
 // "typesafe" Object.values
 export const values = <T, K extends keyof T = keyof T>(obj: T): NonNullable<T[K]>[] => {
-  return Object.values(obj).filter(v => !!v);
-};
+  return Object.values(obj).filter(v => !!v)
+}
 // "typesafe" Object.keys
-export const keys = <T, K extends keyof T = keyof T>(obj: T): K[] => Object.keys(obj) as unknown as K[];
+export const keys = <T, K extends keyof T = keyof T>(obj: T): K[] => Object.keys(obj) as unknown as K[]

@@ -35,12 +35,17 @@ type FormsDataType = {
   multi2: MultiFormProps2[]
 }
 
-const expectType = <TExpected>(value: TExpected): any => {}
+const expectType = <TExpected>(value: TExpected): any => {
+}
 
-const singleForm1Receiver = ({ useFormik }: { useFormik: FormikHook<SingleFormProps1> }) => {}
-const singleForm2Receiver = ({ useFormik }: { useFormik: FormikHook<SingleFormProps2> }) => {}
-const multiForm1Receiver = ({ useFormik }: { useFormik: FormikHook<MultiFormProps1> }) => {}
-const multiForm2Receiver = ({ useFormik }: { useFormik: FormikHook<MultiFormProps2> }) => {}
+const singleForm1Receiver = ({ useFormik }: { useFormik: FormikHook<SingleFormProps1> }) => {
+}
+const singleForm2Receiver = ({ useFormik }: { useFormik: FormikHook<SingleFormProps2> }) => {
+}
+const multiForm1Receiver = ({ useFormik }: { useFormik: FormikHook<MultiFormProps1> }) => {
+}
+const multiForm2Receiver = ({ useFormik }: { useFormik: FormikHook<MultiFormProps2> }) => {
+}
 
 const forms = useMultiFormikHook<FormsDataType>()
 
@@ -86,7 +91,7 @@ multiForm2Receiver({ useFormik: forms.bindGroup('multi1', 'id') })
 
 forms.map(({ key, formik }) => {
   switch (key) {
-    case 'single1':{
+    case 'single1': {
       expectType<SingleFormProps1>(formik.values)
 
       // @ts-expect-error
@@ -95,7 +100,7 @@ forms.map(({ key, formik }) => {
       expectType<MultiFormProps1>(formik.values)
       // @ts-expect-error
       expectType<MultiFormProps2>(formik.values)
-      break;
+      break
     }
     case 'single2':
       expectType<SingleFormProps2>(formik.values)
@@ -106,7 +111,7 @@ forms.map(({ key, formik }) => {
       expectType<MultiFormProps1>(formik.values)
       // @ts-expect-error
       expectType<MultiFormProps2>(formik.values)
-      break;
+      break
     case 'multi1':
       expectType<MultiFormProps1>(formik.values)
       // @ts-expect-error
@@ -115,13 +120,13 @@ forms.map(({ key, formik }) => {
       expectType<SingleFormProps2>(formik.values)
       // @ts-expect-error
       expectType<MultiFormProps2>(formik.values)
-      break;
+      break
     case 'multi2':
-      break;
+      break
 
     // @ts-expect-error - key should exist in form data
     case 'unknown':
-      break;
+      break
   }
 })
 
@@ -145,7 +150,6 @@ expectType<MultiFormProps2 | undefined>(forms.instances.single1?.values)
 expectType<ReturnType<FormikHook<MultiFormProps2>> | undefined>(forms.instances.single1)
 
 
-
 expectType<SingleFormProps2 | undefined>(forms.instances.single2?.values)
 expectType<ReturnType<FormikHook<SingleFormProps2>> | undefined>(forms.instances.single2)
 
@@ -165,7 +169,6 @@ expectType<MultiFormProps2 | undefined>(forms.instances.single2?.values)
 expectType<ReturnType<FormikHook<MultiFormProps2>> | undefined>(forms.instances.single2)
 
 
-
 expectType<MultiFormProps1 | undefined>(forms.groupInstances.multi1?.['id'].values)
 expectType<Record<string, ReturnType<FormikHook<MultiFormProps1>>> | undefined>(forms.groupInstances.multi1)
 
@@ -173,7 +176,6 @@ expectType<Record<string, ReturnType<FormikHook<MultiFormProps1>>> | undefined>(
 expectType<MultiFormProps1 | undefined>(forms.groupInstances.multi2?.['id'].values)
 // @ts-expect-error
 expectType<Record<string, ReturnType<FormikHook<MultiFormProps1>>> | undefined>(forms.groupInstances.multi2)
-
 
 
 /**** `getValues` interface test ****/
@@ -231,8 +233,6 @@ async function submitAll() {
   expectType<SingleFormProps1 | undefined>(result.multi2)
   // @ts-expect-error
   expectType<SingleFormProps2 | undefined>(result.multi2)
-
-
 
 
   expectType<MultiFormProps1[] | undefined>(result.multi1)
