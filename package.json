@@ -20,18 +20,34 @@
   "scripts": {
     "build": "tsup",
     "typecheck": "tsc --noEmit",
-    "prepublish": "pnpm run typecheck && pnpm run build"
+    "prepublish": "pnpm run typecheck && pnpm run test && pnpm run build",
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
-  "keywords": ["formik", "hook", "react", "form", "react-hooks"],
+  "keywords": [
+    "formik",
+    "hook",
+    "react",
+    "form",
+    "react-hooks"
+  ],
   "author": "Grigorii Zander <wyzen.all@gmail.com>",
   "license": "MIT",
   "devDependencies": {
+    "@testing-library/react": "^13.3.0",
     "@types/jest": "^28.1.6",
     "@types/react": "^18.0.15",
     "formik": "^2.2.0",
+    "global-jsdom": "^8.5.0",
+    "jest": "^28.1.3",
+    "jest-environment-jsdom": "^28.1.3",
+    "jsdom": "^20.0.0",
     "react": ">=16.8.0",
+    "react-dom": "^18.2.0",
+    "ts-jest": "^28.0.7",
     "tsup": "^6.1.3",
-    "typescript": "^4.7.4"
+    "typescript": "^4.7.4",
+    "yup": "^0.32.11"
   },
   "peerDependencies": {
     "formik": "^2.2.0",
