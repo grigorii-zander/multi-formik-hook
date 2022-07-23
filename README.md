@@ -5,7 +5,6 @@ It helps manage multiple Formik instances by the single hook.
 ## Requirements
 - React>=16.8.0 (for hooks)
 - Formik>=2.2.0 (it should work with previous versions, but it is not tested)
-- typescript>=4.7.0 (it relies on [Instantiation Expressions](https://devblogs.microsoft.com/typescript/announcing-typescript-4-7/#instantiation-expressions))
 
 ## What it can do
 - Control multiple forms from one place.

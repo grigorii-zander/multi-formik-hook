@@ -1,4 +1,5 @@
-import { FormikHook, useMultiFormik } from '../useMultiFormik'
+import { useMultiFormik } from '../useMultiFormik'
+import { FormikHook } from "../formik.types"
 
 type SingleFormProps1 = {
   single1StringProp: string

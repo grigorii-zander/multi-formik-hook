@@ -1,18 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useFormik } from 'formik'
 import { entries, flat, keys, values } from './utils/object'
-
-type OriginalFormikHook<T = any> = typeof useFormik<T>
-type HookParams<T> = Parameters<OriginalFormikHook<T>>[0]
-
-// Remove `onSubmit` handler from required properties because
-// it is not required anymore since we control form submission in the higher order hook.
-type HookConfig<T> = Omit<HookParams<T>, 'onSubmit'> & {
-  onSubmit?: HookParams<T>['onSubmit']
-}
-type HookReturnType<T> = ReturnType<OriginalFormikHook<T>>
-
-export type FormikHook<T = any> = (config: HookConfig<T>) => HookReturnType<T>
+import { FormikHook } from './formik.types'
 
 type ArrayItem<T> = T extends Array<infer U> ? U : T
 type FormikEntry<T extends Record<string, any>, KEYS extends keyof T> = {
@@ -31,7 +20,7 @@ export function useMultiFormik<T extends Record<string, any>,
   KEYS extends keyof T = keyof T,
   ARRAY_KEYS extends KeysOfType<T, any[], KEYS> = KeysOfType<T, any[], KEYS>,
   NON_ARRAY_KEYS extends KeysNotOfType<T, any[], KEYS> = KeysNotOfType<T, any[], KEYS>,
-  >() {
+>() {
   type Instance<T> = ReturnType<FormikHook<T>>
   type InstanceMap = { [K in NON_ARRAY_KEYS]: Instance<T[K]> }
   const instances = useRef<Partial<InstanceMap>>({})
@@ -158,7 +147,7 @@ export function useMultiFormik<T extends Record<string, any>,
 
       hooksGroup[id] = hook
 
-      return hooksGroup[id]!
+      return hook!
     },
     [useRegisterGroup],
   )
@@ -206,8 +195,7 @@ export function useMultiFormik<T extends Record<string, any>,
     return groupInstances.current[instanceKey]?.[id]?.values || null
   }, [])
 
-  const reset = useCallback(
-    function <K extends KEYS>(form?: K) {
+  const reset = useCallback(<K extends KEYS>(form?: K) => {
       if (form) {
         instances.current[form]?.resetForm()
 
