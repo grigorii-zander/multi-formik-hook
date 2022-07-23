@@ -1,6 +1,6 @@
 {
   "name": "multi-formik-hook",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "React hook for formik",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
