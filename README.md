@@ -50,8 +50,8 @@ you don't need to worry about the nesting. Think about it as `someArray.flat(Inf
 ##### Example
 ```typescript jsx
 // Check if some form is currently validating
-const instance = useMultiFormik();
-const isSomeValidating = instance.map(item => item.formik.isValidating).some(Boolean);
+const instance = useMultiFormik()
+const isSomeValidating = instance.map(item => item.formik.isValidating).some(Boolean)
 ```
 
 #### `bind(formKey: string): FormikHook`
