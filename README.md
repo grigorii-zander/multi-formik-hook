@@ -20,6 +20,16 @@ You can access the formik instance of every form and make your own validation, b
 special utility for that.
 - Nested forms is not supported.
 
+## Installation
+```bash
+# using NPM
+$ npm i multi-formik-hook
+# using Yarn
+$ yarn add multi-formik-hook
+# using pnpm
+$ pnpm i multi-formik-hook
+```
+
 ## API
 ### `useMultiFormik`
 Returns the following object:
