@@ -20,17 +20,73 @@ You can access the formik instance of every form and make your own validation, b
 special utility for that.
 - Nested forms is not supported.
 
+## API
+### `useMultiFormik`
+Returns the following object:
+
+#### `valid: boolean`
+True if all forms are valid.
+
+#### `dirty: boolean`
+True if some form is dirty.
+
+#### `map<R>(cb: (item: {key: string, formik: FormikHook}) => R) => R[]`
+Map over all existing forms and return an array.
+Where `key` is a unique key of the form, and `formik` is the Formik instance.
+
+It also iterates over grouped forms in a flat manner, so
+you don't need to worry about the nesting. Think about it as `someArray.flat(Infinity).map(...)`.
+
+##### Example
+```typescript jsx
+// Check if some form is currently validating
+const instance = useMultiFormik();
+const isSomeValidating = instance.map(item => item.formik.isValidating).some(Boolean);
+```
+
+#### `bind(formKey: string): FormikHook`
+Creates a new Formik hook for the given form key. It dynamically creates a new Formik hook function which you can use
+inside your form component.
+
+#### `bindGroup(formKey: string, formId: string): FormikHook`
+Same as `bind`, but it creates a new Formik hook dedicated to the given form group (basically form array).
+The `formId` is a unique key of the form. It's required to preserve the state of the form on dynamic add it or removal.
+
+#### `instances: Record<string, FormikHook>`
+Object containing all created Formik hooks.
+
+#### `groupInstances: Record<string, Record<string, FormikHook>>`
+Object containing all created Formik hooks for grouped forms.
+
+#### `submitAll(): Promise<[boolean, result]>`
+Submits all forms and returns a tuple with valid/invalid validation status and an object containing all form's current values.
+
+#### `getValues(formKey: string): object`
+Shorthand for getting form values (`instance.instances.formKey.values`).
+
+#### `getGroupValues(formKey: string, formId: string): object`
+Shorthand for getting form values of the group by form ID (`instance.groupInstances.formKey[formId].values`).
+
+#### `reset(formKey?: string): void`
+Resets all forms to their initial values. If `formKey` is provided, it resets only the form with the given key.
+
 ## Usage
-### Basic example
+### Examples
+
+[See interactive example on the Stackblitz](https://stackblitz.com/edit/multi-formik-hook-basic-example)
+
+
+#### Code example
 
 ```typescript jsx
-import React, { FC } from "react"
+import React, { FC, useState, useCallback } from "react"
 import Yup from "yup"
 import {
   useMultiFormikHook,
   FormikHook,
 } from 'multi-formik-hook'
 
+// Define the type of the form
 type PersonalDataFormProps = {
   name: string
   age: string
@@ -51,6 +107,7 @@ const PersonalDataForm: FC<{
     })
   }, [])
   
+  // Use the `useFormik` like a normal Formik hook. All configuration properties are available.
   const formik = useFormik({
     initialValues,
     validationSchema,
@@ -142,26 +199,40 @@ const UserMetaForm:FC = () => {
   };
   
   const forms = useMultiFormikHook<MetaFormProps>()
+
+  const handleSubmit = useCallback(async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    const [valid, result] = await forms.submitAll()
+    if(!valid){
+      return
+    }
+
+    doSomethingWith(result)
+    
+  }, [forms])
   
   return (
-    <div>
+    <form onSubmit={handleSubmit}>
       <PersonalDataForm
+        // provide the `useFormik` hook to the form component
         useFormik={forms.bind('userData')}
       />
       {pets.map(pet => (
         <PetForm
+          // for the group forms it is required to set an unique id
           useFormik={forms.bindGroup('pets', pet.id)}
           key={pet.id}
+          onRemove={() => removePet(pet.id)}
           initialValues={{
             name: '',
             breed: '',
           }}
         />
       ))}
-      <button onClick={addPet}>Add pet</button>
-    </div>
+      <button type={'button'} onClick={addPet}>Add pet</button>
+      <button type={'submit'}>Submit</button>
+    </form>
   )
 }
-
 
 ```
