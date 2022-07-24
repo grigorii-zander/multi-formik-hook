@@ -200,13 +200,13 @@ type MetaFormProps = {
 }
 
 const UserMetaForm:FC = () => {
-  const [pets, setPets] = useState<{id: string}[]>([]);
+  const [pets, setPets] = useState<{id: string}[]>([])
   const addPet = () => {
-    setPets([...pets, {id: uuid()}]);
-  };
+    setPets([...pets, {id: uuid()}])
+  }
   const removePet = (id: string) => {
-    setPets(pets.filter(pet => pet.id !== id));
-  };
+    setPets(pets.filter(pet => pet.id !== id))
+  }
   
   const forms = useMultiFormikHook<MetaFormProps>()
 
