@@ -1,7 +1,7 @@
 {
   "name": "multi-formik-hook",
-  "version": "0.0.5",
-  "description": "React hook for formik",
+  "version": "1.0.0",
+  "description": "React hook for formik library. It helps to control multiple forms in one component.",
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
