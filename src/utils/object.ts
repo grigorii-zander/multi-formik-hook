@@ -44,12 +44,12 @@ export const flat = (obj: unknown): Record<string, any> => {
 }
 
 // "typesafe" Object.entries
-export const entries = <T, K extends keyof T = keyof T>(obj: T): [K, NonNullable<T[K]>][] => {
-  return Object.entries(obj).filter(([, v]) => !!v) as unknown as [K, NonNullable<T[K]>][]
+export const entries = <T extends {}, K extends keyof T = keyof T>(obj: T): [K, NonNullable<T[K]>][] => {
+  return Object.entries(obj).filter(([, v]) => !!v) as [K, NonNullable<T[K]>][]
 }
 // "typesafe" Object.values
-export const values = <T, K extends keyof T = keyof T>(obj: T): NonNullable<T[K]>[] => {
-  return Object.values(obj).filter(v => !!v)
+export const values = <T extends {}, K extends keyof T = keyof T>(obj: T): NonNullable<T[K]>[] => {
+  return Object.values(obj).filter(v => !!v) as NonNullable<T[K]>[]
 }
 // "typesafe" Object.keys
-export const keys = <T, K extends keyof T = keyof T>(obj: T): K[] => Object.keys(obj) as unknown as K[]
+export const keys = <T extends {}, K extends keyof T = keyof T>(obj: T): K[] => Object.keys(obj) as K[]
