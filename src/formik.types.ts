@@ -6,14 +6,24 @@ import {
   FormikErrors,
   FormikState,
   FormikTouched,
-  FormikValues,
 } from 'formik'
 import * as React from 'react'
 
-type HookConfig<T> = Omit<FormikConfig<T>, 'onSubmit'> & {
+export type HookConfig<T> = Omit<FormikConfig<T>, 'onSubmit'> & {
   // it is not required anymore since we control form submission in the higher order hook.
   onSubmit?: FormikConfig<T>['onSubmit']
 }
+
+export type GetFieldType<Obj, Path> = Path extends `${infer Left}.${infer Right}`
+  ? Left extends keyof Obj
+    ? GetFieldType<Exclude<Obj[Left], undefined>, Right> | Extract<Obj[Left], undefined>
+    : undefined
+  : Path extends keyof Obj
+    ? Obj[Path]
+    : undefined
+
+type StringKeys<T> = T extends string ? T : never
+export type FormikValues = Record<string, number | boolean | string | null | undefined | number[] | boolean[] | string[]>
 
 /*
 * This is the almost exact copy of the useFormik function type from the "formik" package.
@@ -47,7 +57,7 @@ export type FormikHook<Values extends FormikValues = FormikValues> = ({
   };
   handleChange: {
     (e: React.ChangeEvent<any>): void;
-    <T_1 = string | React.ChangeEvent<any>>(field: T_1): T_1 extends React.ChangeEvent<any> ? void : (e: string | React.ChangeEvent<any>) => void;
+    <T = string | React.ChangeEvent<any>>(field: T): T extends React.ChangeEvent<any> ? void : (e: string | React.ChangeEvent<any>) => void;
   };
   handleReset: (e: any) => void;
   handleSubmit: (e?: React.FormEvent<HTMLFormElement> | undefined) => void;
@@ -68,9 +78,9 @@ export type FormikHook<Values extends FormikValues = FormikValues> = ({
   dirty: boolean;
   unregisterField: (name: string) => void;
   registerField: (name: string, { validate }: any) => void;
-  getFieldProps: (nameOrOptions: any) => FieldInputProps<any>;
-  getFieldMeta: (name: string) => FieldMetaProps<any>;
-  getFieldHelpers: (name: string) => FieldHelperProps<any>;
+  getFieldProps: <P extends StringKeys<keyof Values>>(path: P) => FieldInputProps<GetFieldType<Values, P>>
+  getFieldMeta: <P extends StringKeys<keyof Values>>(path: P) => FieldMetaProps<GetFieldType<Values, P>>
+  getFieldHelpers: <P extends StringKeys<keyof Values>>(path: P) => FieldHelperProps<GetFieldType<Values, P>>
   validateOnBlur: boolean;
   validateOnChange: boolean;
   validateOnMount: boolean;
@@ -82,3 +92,6 @@ export type FormikHook<Values extends FormikValues = FormikValues> = ({
   status?: any;
   submitCount: number;
 }
+
+export type FormikInstance<T extends FormikValues> = ReturnType<FormikHook<T>>
+export type FormikInstanceKeys<T extends FormikInstance<any>> = StringKeys<keyof T['values']>

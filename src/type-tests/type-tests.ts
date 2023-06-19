@@ -15,6 +15,11 @@ type SingleFormProps2 = {
   single2ArrayProp: string[]
 }
 
+type SingleFormProps3 = {
+  single3StringProp: string
+}
+
+
 type MultiFormProps1 = {
   multi1StringProp: string
   multi1NumberProps: number
@@ -32,6 +37,7 @@ type MultiFormProps2 = {
 type FormsDataType = {
   single1: SingleFormProps1
   single2: SingleFormProps2
+  single3: SingleFormProps3
   multi1: MultiFormProps1[]
   multi2: MultiFormProps2[]
 }
@@ -248,4 +254,31 @@ async function submitAll() {
   expectType<MultiFormProps1[] | undefined>(result.single2)
   // @ts-expect-error
   expectType<MultiFormProps2[] | undefined>(result.single2)
+}
+
+/**** instance property/helpers/meta getters test ****/
+function helpersTest1(){
+  const hookSingle1 = forms.bind('single1')
+  const instanceSingle1 = hookSingle1({
+    initialValues: {
+      single1StringProp: '1',
+      single1ArrayProp: ['1', '2'],
+      single1BooleanProp: true,
+      single1NumberProps: 123,
+    }
+  })
+
+  const str: string = instanceSingle1.getFieldProps('single1StringProp').value
+  const strArr: string[] = instanceSingle1.getFieldProps('single1ArrayProp').value
+  const bool: boolean = instanceSingle1.getFieldProps('single1BooleanProp').value
+  const num: number = instanceSingle1.getFieldProps('single1NumberProps').value
+}
+function helpersTest2(){
+  const hookSingle3 = forms.bind('single3')
+  const instanceSingle3 = hookSingle3({
+    initialValues: {
+      single3StringProp: '1',
+    }
+  })
+  const str: string = instanceSingle3.getFieldProps('single3StringProp').value
 }
