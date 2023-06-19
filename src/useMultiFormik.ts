@@ -23,7 +23,7 @@ export function useMultiFormik<T extends Record<string, any>,
 >() {
   type Instance<T extends FormikValues> = ReturnType<FormikHook<T>>
   type InstanceMap = { [K in NON_ARRAY_KEYS]?: Instance<T[K]> }
-  const instances = useRef<InstanceMap>({} satisfies InstanceMap)
+  const instances = useRef<InstanceMap>({})
 
   type GroupInstanceMap = { [K in ARRAY_KEYS]?: { [index: string]: Instance<ArrayItem<T[K]>> } }
   const groupInstances = useRef<GroupInstanceMap>({})
