@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { useFormik } from 'formik'
+import { FormikValues, useFormik } from 'formik'
 import { entries, flat, keys, values } from './utils/object'
 import { FormikHook } from './formik.types'
 
@@ -21,20 +21,20 @@ export function useMultiFormik<T extends Record<string, any>,
   ARRAY_KEYS extends KeysOfType<T, any[], KEYS> = KeysOfType<T, any[], KEYS>,
   NON_ARRAY_KEYS extends KeysNotOfType<T, any[], KEYS> = KeysNotOfType<T, any[], KEYS>,
 >() {
-  type Instance<T> = ReturnType<FormikHook<T>>
-  type InstanceMap = { [K in NON_ARRAY_KEYS]: Instance<T[K]> }
-  const instances = useRef<Partial<InstanceMap>>({})
+  type Instance<T extends FormikValues> = ReturnType<FormikHook<T>>
+  type InstanceMap = { [K in NON_ARRAY_KEYS]?: Instance<T[K]> }
+  const instances = useRef<InstanceMap>({} satisfies InstanceMap)
 
-  type GroupInstanceMap = { [K in ARRAY_KEYS]: { [index: string]: Instance<ArrayItem<T[K]>> } }
-  const groupInstances = useRef<Partial<GroupInstanceMap>>({})
+  type GroupInstanceMap = { [K in ARRAY_KEYS]?: { [index: string]: Instance<ArrayItem<T[K]>> } }
+  const groupInstances = useRef<GroupInstanceMap>({})
 
-  type HookFn<T> = FormikHook<T>
-  type HookFnMap = { [K in NON_ARRAY_KEYS]: HookFn<T[K]> }
-  const hooksRef = useRef<Partial<HookFnMap>>({})
+  type HookFn<T extends FormikValues> = FormikHook<T>
+  type HookFnMap = { [K in NON_ARRAY_KEYS]?: HookFn<T[K]> }
+  const hooksRef = useRef<HookFnMap>({})
 
-  type HookFnGroup<T> = { [index: string]: HookFn<T> }
-  type HookFnGroupMap = { [K in ARRAY_KEYS]: HookFnGroup<ArrayItem<T[K]>> }
-  const hooksGroupsRef = useRef<Partial<HookFnGroupMap>>({})
+  type HookFnGroup<T extends FormikValues> = { [index: string]: HookFn<T> }
+  type HookFnGroupMap = { [K in ARRAY_KEYS]?: HookFnGroup<ArrayItem<T[K]>> }
+  const hooksGroupsRef = useRef<HookFnGroupMap>({})
 
   const [dirty, setDirty] = useState(false)
   const [valid, setValid] = useState(true)
@@ -82,7 +82,8 @@ export function useMultiFormik<T extends Record<string, any>,
     <K extends ARRAY_KEYS>(groupKey: K, id: string, instance: Instance<T[K]>) => {
       // eslint-disable-next-line react-hooks/rules-of-hooks
       useEffect(() => {
-        (groupInstances.current[groupKey] = groupInstances.current[groupKey] || {})[id] = instance
+        const group = groupInstances.current[groupKey] || {}
+        group[id] = instance
         runValidation()
         // eslint-disable-next-line
       }, [instance])
@@ -200,7 +201,8 @@ export function useMultiFormik<T extends Record<string, any>,
         instances.current[form]?.resetForm()
 
         // TODO: it seems like there is a bug in typescript, it won't resolve nested maps here
-        values(groupInstances.current[form] as any || {}).forEach((instance) => instance.resetForm())
+        // @ts-ignore
+        values(groupInstances.current[form] || {}).forEach((instance) => instance.resetForm())
       } else {
         map(({ formik }) => {
           formik.resetForm()
